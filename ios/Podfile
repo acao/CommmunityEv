@@ -1,0 +1,30 @@
+# Uncomment this line to define a global platform for your project
+# platform :ios, '8.0'
+# Uncomment this line if you're using Swift
+# use_frameworks!
+source 'https://github.com/CocoaPods/Specs.git'
+pod 'React', :path => '../node_modules/react-native', :subspecs => [
+  'Core',
+  'RCTGeolocation',
+  'RCTImage',
+  'RCTNetwork',
+  'RCTText',
+  'RCTWebSocket'
+]
+pod 'react-native-fbsdkcore', :path => '../node_modules/react-native-fbsdkcore'
+pod 'react-native-fbsdklogin', :path => '../node_modules/react-native-fbsdklogin'
+pod 'react-native-material-kit', :path => '../node_modules/react-native-material-kit'
+
+post_install do |installer|
+  target = installer.pods_project.targets.select{|t| 'React' == t.name}.first
+  phase = target.new_shell_script_build_phase('Run Script')
+  phase.shell_script = "if nc -w 5 -z localhost 8081 ; then\n  if ! curl -s \"http://localhost:8081/status\" | grep -q \"packager-status:running\" ; then\n    echo \"Port 8081 already in use, packager is either not running or not running correctly\"\n    exit 2\n  fi\nelse\n  open $SRCROOT/../node_modules/react-native/packager/launchPackager.command || echo \"Can't start packager automatically\"\nfi"
+end
+
+target 'CommunityEv' do
+
+end
+
+target 'CommunityEvTests' do
+
+end
