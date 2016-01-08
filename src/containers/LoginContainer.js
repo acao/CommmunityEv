@@ -4,6 +4,9 @@ import { FBSDKLoginButton } from 'react-native-fbsdklogin';
 import { readPermissions } from '../lib/fbsdk';
 import { EventsContainer } from '../containers';
 
+
+
+
 export default class LoginContainer extends Component {
 
   static defaultProps = {
@@ -32,11 +35,12 @@ export default class LoginContainer extends Component {
 
 var Login = React.createClass({
   render: function() {
+    const dispatch = this.props.dispatch;
     return (
       <View>
         <FBSDKLoginButton
-          onLoginFinished={(err, res)=> actions.accountLogin(err, res)}
-          onLogoutFinished={()=> actions.accountLogout()}
+          onLoginFinished={(err, res)=> dispatch(actions.accountLogin(err, res))}
+          onLogoutFinished={dispatch(actions.accountLogout())}
           readPermissions={readPermissions}
           />
       </View>
