@@ -1,10 +1,7 @@
-var FBSDKCore = require('react-native-fbsdkcore');
-var {
-  FBSDKGraphRequest,
-} = FBSDKCore;
-
-const debug = require('debug')('app:lib:fbsdk');
-debug.enable('*');
+const FBSDKCore = require('react-native-fbsdkcore');
+const { FBSDKGraphRequest } = FBSDKCore;
+import { camelizeKeys } from 'humps';
+const debug = require('react-native-debug')('app:lib:fbsdk');
 
 const defaultOpts = {
   graphPath: 'me/events',
@@ -13,20 +10,19 @@ const defaultOpts = {
 /**
  * Return a preconfigued promise
  */
-export function FBFetch(...opts) {
+export function ogFetch(...opts) {
   return new Promise((resolve, reject) => {
     const request = new FBSDKGraphRequest((error, result) => {
       if (error) {
         debug('GraphRequest Error:', error);
-        reject(error);
       } else {
-        resolve(result); // Data from request is in result
+         resolve(camelizeKeys(result));
       }
     }, ...defaultOpts, ...opts);
-
     request.start();
   });
 }
+
 
 export function getReadPermissions() {
   return [
@@ -38,14 +34,14 @@ export function getReadPermissions() {
 }
 
 export function eventFields() {
-  return `id,description,cover,interested_count,attending_count,maybe_count,
-    category,type,start_time,end_time,picture{url,width,height,is_silhouette},name}`;
+  return ['id', 'description', 'cover']
+  //return 'id,description,cover,,name,interested_count,attending_count,maybe_count,category,type,start_time,end_time,picture{url,width,height,is_silhouette}';
 }
 export function placeFields(withEvents = false) {
   let events = '';
-  if (withEvents) events = `,events:{${eventFields()}}`;
+  if (withEvents) {
+    events = `,events:{${eventFields()}}`;
+  }
 
-  return `id,about,global_brand_page_name,hours,location,locations,attire,cover,awards,
-  band_interests,description,description_html,parking,food_styles, store_location_descriptor,
-  website,emails,place_type,phone,payment_options,current_location${events}`;
+  return 'id,about,global_brand_page_name,hours,location,locations,attire,cover,awards,band_interests,description,description_html,parking,food_styles, store_location_descriptor,website,emails,place_type,phone,payment_options,current_location}';
 }

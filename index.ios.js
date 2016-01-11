@@ -1,8 +1,4 @@
-import React from 'react-native';
-import {AppContainer} from './src/containers';
+import React, { AppRegistry } from 'react-native';
+import { AppContainer } from './src/containers';
 
-var {
-  AppRegistry
-} = React;
-
-AppRegistry.registerComponent('ReduxRouter', () => AppContainer);
+AppRegistry.registerComponent('CommunityEv', () => AppContainer);

@@ -1,11 +1,9 @@
-import CETheme from './CETheme';
-import CEColors from './CEColors';
-import debug from './debug';
+import theme from './theme';
+import colors from './colors';
 import fbsdk from './fbsdk';
 
 export default {
-  CETheme,
-  CEColors,
+  theme,
+  colors,
   fbsdk,
-  debug,
-}
+};

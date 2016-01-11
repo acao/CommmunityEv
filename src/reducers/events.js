@@ -1,64 +1,47 @@
-import { combineReducers } from 'redux'
+import { createReducer } from '../reducers';
 import {
-  EVENTS_LOAD_REQUESTED,
-  EVENTS_LOAD_COMPLETED,
+  EVENTS_REQUESTED,
+  EVENTS_SUCCESS,
+  EVENTS_ERROR,
   BOOKMARK_EVENT,
   RSVP_EVENT,
-} from '../actions'
+  EVENT_LOAD,
+} from '../actions/eventActions';
 
-function selectEvent(state = 'reactjs', action) {
-  switch (action.type) {
-    case BOOKMARK_EVENT:
-      return action.payloa;
-    default:
-      return state;
-  }
-}
+const moment = require('moment');
 
-function rsvpEvent(state = 'reactjs', action) {
-  switch (action.type) {
-    case RSVP_EVENT:
-      return action.payload;
-    default:
-      return state;
-  }
-}
-
-function events(state = {
-  isFetching: false,
-  didInvalidate: false,
-  items: [],
-}, action) {
-  switch (action.type) {
-    case EVENTS_LOAD_REQUESTED:
-      return Object.assign({}, state, {
-        isFetching: true,
-      });
-    case EVENTS_LOAD_COMPLETED:
-      return Object.assign({}, state, {
-        isFetching: false,
-        events: action.payload,
-      });
-    default:
-      return state;
-  }
-}
-
-function eventsLoad(state = {}, action) {
-  switch (action.type) {
-    case EVENTS_LOAD_COMPLETED:
-      return Object.assign({}, state, {
-        [action.id]: events(state[action.reddit], action),
-      });
-    default:
-      return state;
-  }
-}
-
-const rootReducer = combineReducers({
-  eventsLoad,
-  selectEvent,
-  rsvpEvent,
-});
-
-export default rootReducer;
+const initialState = [{
+  events: [],
+  eventsCount: 0,
+  isFetchingEvents: false,
+  selectedEvent: {},
+}];
+export const eventHandlers = createReducer([], {
+  [EVENTS_REQUESTED]: (state) => {
+    return Object.assign({}, state, {
+      isFetchingEvents: true,
+    });
+  },
+  [EVENT_LOAD]: (state, action) => {
+    const { events } = state;
+    // get event by id
+    const selectedEvent = events.filter((event) => {
+      return event.id === action.payload.eventId;
+    })[0];
+    return Object.assign({}, state, {
+      selectedEvent: selectedEvent,
+    });
+  },
+  [EVENTS_ERROR]: (state) => {
+    return Object.assign({}, state, {
+      isFetchingEvents: false,
+    });
+  },
+  [EVENTS_SUCCESS]: (state, action) => {
+    return Object.assign({}, state, {
+      isFetchingEvents: false,
+      events: action.payload.data,
+      eventsCount: action.payload.data.length,
+    });
+  },
+}, initialState);

@@ -1,11 +1,10 @@
-export const ACCOUNT_IS_LOGGING_IN = 'ACCOUNT_IS_LOGGING_IN';
-export const ACCOUNT_LOGIN_CANCELLED = 'ACCOUNT_LOGIN_CANCELLED';
+export const ACCOUNT_LOGIN = 'ACCOUNT_LOGIN';
 export const ACCOUNT_LOGIN_ERROR = 'ACCOUNT_LOGIN_ERROR';
-export const ACCOUNT_LOGIN_AUTHENTICATED = 'ACCOUNT_LOGIN_AUTHENTICATED';
+export const ACCOUNT_LOGIN_SUCCESS = 'ACCOUNT_LOGIN_SUCCESS';
 export const ACCOUNT_LOGOUT = 'ACCOUNT_LOGOUT';
 
 export function accountLogin(err, res) {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     if (err) {
       dispatch({
         type: ACCOUNT_LOGIN_ERROR,
@@ -13,7 +12,7 @@ export function accountLogin(err, res) {
       });
     } else {
       dispatch({
-        type: ACCOUNT_LOGIN_AUTHENTICATED,
+        type: ACCOUNT_LOGIN_SUCCESS,
         payload: res,
       });
     }
@@ -21,7 +20,7 @@ export function accountLogin(err, res) {
 }
 
 export function accountLogout() {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     dispatch({
       type: ACCOUNT_LOGOUT,
     });

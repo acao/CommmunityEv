@@ -2,9 +2,9 @@
 /**
  * Created by ywu on 15/7/16.
  */
-const MKColor = {
-  //Red: '#F44336',
-  //Pink: '#E91E63',
+module.exports = {
+  // Red: '#F44336',
+  // Pink: '#E91E63',
   Red: '#FF5252',
   Pink: '#FF4081',
   Purple: '#9C27B0',
@@ -33,4 +33,3 @@ const MKColor = {
   RGBPink: '255, 64, 129',
   RGBTeal: '0,150,136',
 };
-export default MKColor;

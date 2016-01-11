@@ -1,20 +1,29 @@
 
 // var GOOGLE_MAPS_API_KEY = 'AIzaSyBDZOWrvmGMgmhimndfQa9TnFn21M_rTAQ';
 
-import React, { Component, PropTypes, View, Text, StyleSheet, Platform } from 'react-native';
+import React, { Component, PropTypes, View, Text, StyleSheet, Platform, Image } from 'react-native';
 // const RefreshableListView = require('react-native-refreshable-listview');
 // const FBSDKLogin = require('react-native-fbsdklogin');
 const debug = require('react-native-debug')('app:containers:EventsListItem');
 
+// var {
+//   AppRegistry,
+//   StyleSheet,
+//   Text,
+//   View,
+//   Image,
+//   ScrollView,
+// } = React;
+
 import {
   MKCard,
-  MKColor,
   MKCardTitle,
   MKCardImage,
   MKCardContent,
   MKCardMenu,
   MKCardStyles,
-  MKCardAction
+  MKCardAction,
+  MKColor,
 } from 'react-native-material-kit';
 
 class EventsListItem extends Component {
@@ -26,43 +35,27 @@ class EventsListItem extends Component {
   constructor(props, context) {
     super(props, context);
   }
-
-  viewEvent(id) {
-    if (this.props.onViewEvent) {
-        this.props.onViewEvent(id);
-    }
-  }
-
   render() {
     const { event } = this.props;
 
     return (
-      <View>
-        <View style={styles.area}>
-              <Text onPress={this.viewEvent.bind(this, event.id)}
-                    style={styles.areaTitle}
-                >
-                  {event.name}
-                  </Text>
-            <Text style={{fontStyle: 'italic'}}>{event.startTime} - {event.endTime}</Text>
-            <Text>{event.description.substring(0, 140)}</Text>
-        </View>
+      <View style={styles.container}>
+      {((event.cover && event.cover.source) ? (
+          <Image
+              source={{uri: event.cover.source}}
+          />
+        ) : null)}
+        <Text style={styles.areaTitle}>{event.name}</Text>
+        <Text style={{fontStyle: 'italic'}}>{event.startTime} - {event.endTime}</Text>
+        <Text>{event.description}</Text>
       </View>
     );
   }
 }
-/**
- *   {((event.cover && event.cover.source) ? (
-     <Image
-         source={{uri: event.cover.source}}
-     />
-   ) : null)}
- */
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 60,
+    paddingTop: 72,
     backgroundColor: MKColor.Silver,
   },
   area: {

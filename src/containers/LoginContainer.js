@@ -1,51 +1,51 @@
 import React, { Component, PropTypes } from 'react-native';
-const { View, Text, StatusBarIOS } = React;
+const { View, Text, StyleSheet } = React;
 import { FBSDKLoginButton } from 'react-native-fbsdklogin';
 import { readPermissions } from '../lib/fbsdk';
-import { EventsContainer } from '../containers';
+import { Actions as routerActions } from 'react-native-router-flux';
+import * as accountActions from '../actions/accountActions';
+import { connect } from 'react-redux/native';
 
-
-
-
-export default class LoginContainer extends Component {
-
-  static defaultProps = {
-    ...Component.defaultProps,
-    navigator: PropTypes.navigator,
-  }
-
-  constructor(props, context){
+class LoginContainer extends Component {
+  constructor(props, context) {
     super(props, context);
   }
-
   render() {
     return (
       <View style={styles.splashContainer}>
-        <Text style={styles.splashText} onPress={this.continue}>Events</Text>
+        <Text style={styles.splashText} onPress={this.continue.bind(this)}>Events</Text>
         <Login />
       </View>
     );
   }
   continue() {
-    StatusBarIOS.setStyle('default', true);
-    props.router.pushState(null, 'events')
+    routerActions.events();
+    // // StatusBarIOS.setStyle('default', true);
+    // this.props.navigator.pop('events');
+
   }
 };
 
 
 var Login = React.createClass({
-  render: function() {
-    const dispatch = this.props.dispatch;
+  handleLoginFinished(err, res) {
+    this.props.dispatch(accountActions.accountLogin(err, res));
+    this.props.dispatch(routerActions.login({data:"Custom data", title:'Custom title' }))
+  },
+  handleLogoutFinished() {
+    this.props.dispatch(accountActions.accountLogout());
+  },
+  render() {
     return (
-      <View>
-        <FBSDKLoginButton
-          onLoginFinished={(err, res)=> dispatch(actions.accountLogin(err, res))}
-          onLogoutFinished={dispatch(actions.accountLogout())}
-          readPermissions={readPermissions}
+        <View>
+          <FBSDKLoginButton
+            onLoginFinished={this.handleLoginFinished}
+            onLogoutFinished={this.handleLogoutFinished}
+            readPermissions={readPermissions}
           />
-      </View>
+        </View>
     );
-  }
+  },
 });
 
 var styles = StyleSheet.create({
@@ -66,6 +66,14 @@ var styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 22,
   },
-})
+});
+// Note: use https://github.com/faassen/reselect for better performance.
+function select(state) {
+  return {
+    account: state.account.account,
+    isLoggedIn: state.account.isLoggedIn
+  };
+}
 
-export default LoginContainer;
+
+export default connect(select)(LoginContainer);
