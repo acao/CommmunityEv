@@ -1,4 +1,6 @@
 import { createReducer } from '../reducers';
+
+
 import {
   EVENTS_REQUESTED,
   EVENTS_SUCCESS,
@@ -29,7 +31,7 @@ export const eventHandlers = createReducer([], {
       return event.id === action.payload.eventId;
     })[0];
     return Object.assign({}, state, {
-      selectedEvent: selectedEvent,
+      selectedEvent,
     });
   },
   [EVENTS_ERROR]: (state) => {

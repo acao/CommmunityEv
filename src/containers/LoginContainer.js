@@ -10,37 +10,47 @@ class LoginContainer extends Component {
   constructor(props, context) {
     super(props, context);
   }
+  componentWillMount() {
+    this.redirectToEvents(this.props.isLoggedIn);
+  }
+  componentWillReceiveProps(nextProps) {
+    this.redirectToEvents(nextProps.isLoggedIn);
+  }
+  redirectToEvents(isLoggedIn) {
+    if (isLoggedIn) routerActions.events();
+  }
+  handleLoginFinished(err, res) {
+    this.props.dispatch(accountActions.accountLogin(err, res));
+  }
+  handleLogoutFinished() {
+    this.props.dispatch(accountActions.accountLogout());
+  }
   render() {
     return (
       <View style={styles.splashContainer}>
-        <Text style={styles.splashText} onPress={this.continue.bind(this)}>Events</Text>
-        <Login />
+        <Login
+          onLoginFinished={this.handleLoginFinished.bind(this)}
+          onLogoutFinished={this.handleLogoutFinished.bind(this)}
+         />
+         <Text style={styles.splashText} onPress={this.continue.bind(this)}>Return To Events</Text>
       </View>
     );
   }
   continue() {
     routerActions.events();
-    // // StatusBarIOS.setStyle('default', true);
-    // this.props.navigator.pop('events');
-
   }
+}
+LoginContainer.propTypes = {
+  isLoggedIn: PropTypes.bool,
+  account: PropTypes.object,
 };
 
-
 var Login = React.createClass({
-  handleLoginFinished(err, res) {
-    this.props.dispatch(accountActions.accountLogin(err, res));
-    this.props.dispatch(routerActions.login({data:"Custom data", title:'Custom title' }))
-  },
-  handleLogoutFinished() {
-    this.props.dispatch(accountActions.accountLogout());
-  },
   render() {
     return (
         <View>
           <FBSDKLoginButton
-            onLoginFinished={this.handleLoginFinished}
-            onLogoutFinished={this.handleLogoutFinished}
+            {...this.props}
             readPermissions={readPermissions}
           />
         </View>
@@ -71,7 +81,7 @@ var styles = StyleSheet.create({
 function select(state) {
   return {
     account: state.account.account,
-    isLoggedIn: state.account.isLoggedIn
+    isLoggedIn: state.account.isLoggedIn,
   };
 }
 

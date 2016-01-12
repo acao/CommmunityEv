@@ -1,7 +1,7 @@
 
 // var GOOGLE_MAPS_API_KEY = 'AIzaSyBDZOWrvmGMgmhimndfQa9TnFn21M_rTAQ';
 
-import React, { Component, PropTypes } from 'react-native';
+import React, { Component, PropTypes, ScrollView } from 'react-native';
 // const RefreshableListView = require('react-native-refreshable-listview');
 // const FBSDKLogin = require('react-native-fbsdklogin');
 
@@ -35,7 +35,9 @@ class EventViewContainer extends Component {
   }
   render() {
     return (
-      <EventViewItem event={this.props.event}  />
+      <ScrollView>
+        <EventViewItem event={this.props.event}  />
+      </ScrollView>
     );
   }
 }

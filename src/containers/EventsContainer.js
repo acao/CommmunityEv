@@ -11,7 +11,7 @@ import * as eventActions from '../actions/eventActions';
 import EventsListItem from '../components/EventsListItem';
 const debug = require('react-native-debug')('app:containers:EventsContainer');
 import { Actions as routerActions } from 'react-native-router-flux';
-var {  StyleSheet, Text, View, Image, ListView } = React;
+var {  StyleSheet, Text, View, Image, ListView, ScrollView } = React;
 
 
 class EventsContainer extends Component {
@@ -30,6 +30,17 @@ class EventsContainer extends Component {
   };
   componentWillMount() {
     this.reloadEvents();
+    // this.shouldRedirectToLogin(this.props.isLoggedIn);
+  }
+  componentWillReceiveProps(nextProps){
+    const justLoggedIn = (nextProps.isLoggedIn && !this.props.isLoggedIn);
+    if (justLoggedIn) {
+      console.log('just logged in');
+      this.reloadEvents();
+    }
+  }
+  shouldRedirectToLogin(isLoggedIn) {
+    if (!isLoggedIn) routerActions.login();
   }
   // componentWillUpdate() {
   //
@@ -58,7 +69,9 @@ class EventsContainer extends Component {
   // }
 
   render() {
-    const eventsList = this.props.events.map((event, key) => {
+    const { events, isLoggedIn } = this.props;
+    const hasEvents = (events.length > 0);
+    const eventsList = hasEvents ? events.map((event, key) => {
       return (
         <EventsListItem
             key={key}
@@ -66,11 +79,11 @@ class EventsContainer extends Component {
             onViewEvent={this.viewEvent.bind(this)}
         />
         );
-    });
+    }) : (<Text>You need to be signed in to view events!</Text>);
     return (
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <View>{eventsList}</View>
-      </View>
+      </ScrollView>
     );
     // return (
     //     <RefreshableListView
@@ -93,7 +106,8 @@ EventsContainer.defaultProps = {
 
 var styles = StyleSheet.create({
   container: {
-    marginTop: 60,
+    flex: 1,
+    marginTop: 70,
   },
   eventsContainer: {
     alignItems: 'center',
@@ -111,6 +125,7 @@ function select(state) {
   return {
     events: state.events.events,
     eventsCount: state.events.eventCount,
+    isLoggedIn: state.account.isLoggedIn,
   };
 }
 

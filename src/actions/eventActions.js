@@ -7,11 +7,11 @@ export const EVENTS_SUCCESS = 'EVENTS_SUCCESS';
 export const BOOKMARK_EVENT = 'BOOKMARK_EVENT';
 export const RSVP_EVENT = 'RSVP_EVENT';
 
+  const eventLoadURI = 'id,name,description,cover,start_date,end_date,place,attending_count,interested_count,maybe_count,category,type,rsvp_status,attending,can_guests_invite,end_time,start_time,timezone,updated_time,comments,picture';
 export function loadMyEvents(...args) {
   return dispatch => {
-    ogFetch('me/events')
+    ogFetch('me/events', {fields: {string: eventLoadURI}})
           .then((response) => {
-            console.log('oooh', response.data.length);
             dispatch({
               type: EVENTS_SUCCESS,
               payload: response,

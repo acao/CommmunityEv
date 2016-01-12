@@ -11,6 +11,7 @@ const initialState = [{
 }];
 export const accountHandlers = createReducer([], {
   [ACCOUNT_LOGIN]: (state, action) => {
+    console.log(action.payload);
     return Object.assign({}, state, {
       isLoggedIn: true,
       account: action.payload.data,

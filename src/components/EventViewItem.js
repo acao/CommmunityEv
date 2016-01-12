@@ -40,14 +40,18 @@ class EventsListItem extends Component {
 
     return (
       <View style={styles.container}>
-      {((event.cover && event.cover.source) ? (
-          <Image
+        <View style={MKCardStyles.card}>
+        {(event.cover && event.cover.source) ? (
+            <Image
+              style={MKCardStyles.image}
               source={{uri: event.cover.source}}
-          />
-        ) : null)}
-        <Text style={styles.areaTitle}>{event.name}</Text>
-        <Text style={{fontStyle: 'italic'}}>{event.startTime} - {event.endTime}</Text>
-        <Text>{event.description}</Text>
+            />
+          ) : null}
+          <View style={styles.cardTitleArea}>
+              <Text style={styles.cardTitle}>{event.name}</Text>
+          </View>
+          <Text style={MKCardStyles.content}>{event.description}</Text>
+        </View>
       </View>
     );
   }
@@ -55,16 +59,15 @@ class EventsListItem extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 72,
-    backgroundColor: MKColor.Silver,
+    paddingTop: 60,
   },
-  area: {
-    padding: 8,
-    backgroundColor: MKColor.White,
+  cardTitleArea: {
+    backgroundColor: MKColor.black,
+    padding: 14,
   },
-  areaTitle: {
-    fontSize: 16,
-    color: '#444',
+  cardTitle: {
+    fontSize: 24,
+    color: MKColor.white,
     fontWeight: '700',
     fontFamily: Platform.OS === 'android' ? 'sans-serif-light' : undefined,
   },

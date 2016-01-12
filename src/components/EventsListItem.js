@@ -1,21 +1,17 @@
 
 // var GOOGLE_MAPS_API_KEY = 'AIzaSyBDZOWrvmGMgmhimndfQa9TnFn21M_rTAQ';
 
-import React, { Component, PropTypes, View, Text, StyleSheet, Platform } from 'react-native';
+import React, { Component, PropTypes, View, Text, StyleSheet, Platform, Image } from 'react-native';
 // const RefreshableListView = require('react-native-refreshable-listview');
 // const FBSDKLogin = require('react-native-fbsdklogin');
 const debug = require('react-native-debug')('app:containers:EventsListItem');
 
-import {
-  MKCard,
-  MKColor,
-  MKCardTitle,
-  MKCardImage,
-  MKCardContent,
-  MKCardMenu,
+import MDK from 'react-native-material-kit';
+const {
   MKCardStyles,
-  MKCardAction
-} from 'react-native-material-kit';
+  MKColor,
+} = MDK;
+import DateDisplay from './DateDisplay';
 
 class EventsListItem extends Component {
 
@@ -37,15 +33,28 @@ class EventsListItem extends Component {
     const { event } = this.props;
 
     return (
+      <View style={MKCardStyles.card}>
+      {(event.cover && event.cover.source) ? (
+          <Image
+            onPress={this.viewEvent.bind(this, event.id)}
+            style={MKCardStyles.image}
+            source={{uri: event.cover.source}}
+          />
+        ) : <Image style={MKCardStyles.image} source={{uri: 'http://facebook.github.io/react/img/logo_og.png'}}/>}
+
       <View>
-        <View style={styles.area}>
-              <Text onPress={this.viewEvent.bind(this, event.id)}
-                    style={styles.areaTitle}
-                >
-                  {event.name}
-                  </Text>
-            <Text style={{fontStyle: 'italic'}}>{event.startTime} - {event.endTime}</Text>
-            <Text>{event.description.substring(0, 140)}</Text>
+          <Text
+              style={[MKCardStyles.content, {backgroundColor: MKColor.Cyan, textAlign: 'center'}]}
+          >
+            <Text onPress={this.viewEvent.bind(this, event.id)} style={[styles.cardTitle, {color: 'white'}]}>{event.name}</Text>
+          </Text>
+          <DateDisplay startTime={event.startTime} endTime={event.endTime} />
+          {event.description ?
+            (<Text onPress={this.viewEvent.bind(this, event.id)} style={MKCardStyles.content}>{event.description.substring(0, 140)}</Text>)
+          : null}
+      </View>
+        <View style={MKCardStyles.action}>
+          <Text>My Action</Text>
         </View>
       </View>
     );
@@ -69,10 +78,12 @@ const styles = StyleSheet.create({
     padding: 8,
     backgroundColor: MKColor.White,
   },
-  areaTitle: {
-    fontSize: 16,
-    color: '#444',
+  cardTitle: {
+    fontSize: 18,
+    color: 'white',
     fontWeight: '700',
+    flex: 1,
+
     fontFamily: Platform.OS === 'android' ? 'sans-serif-light' : undefined,
   },
 });

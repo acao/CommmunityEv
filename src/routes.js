@@ -29,7 +29,7 @@ export default class Routes extends Component {
   }
   render() {
     return (
-        <Router hideNavBar={false} initialRoutes={['login']}>
+        <Router hideNavBar={false} initialRoutes={['events','login']}>
             <Schema name="modal" sceneConfig={Navigator.SceneConfigs.FloatFromBottom}/>
             <Schema name="default" sceneConfig={Navigator.SceneConfigs.FloatFromRight} />
             <Schema name="withoutAnimation" />
@@ -37,10 +37,11 @@ export default class Routes extends Component {
               icon={TabIcon}
               type="switch"
             />
-            <Route name="events" title="Events" component={EventsContainer} />
+            <Route name="events" title="Events" component={EventsContainer}>
+              <Route name="eventfilters" title="Filter Events" />
+            </Route>
             <Route name="viewevent"  title="View Event" component={EventViewContainer} />
             <Route name="login" title="Login" schema="modal" component={LoginContainer}/>
-
         </Router>
     );
   }
